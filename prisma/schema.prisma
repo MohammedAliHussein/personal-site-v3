@@ -1,11 +1,26 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model ProjectTechnology {
+  title           String   @db.VarChar(50)
+  technology_name String   @db.VarChar(50)
+  Projects        Projects @relation(fields: [title], references: [title], onDelete: NoAction, onUpdate: NoAction, map: "projecttechnology_ibfk_1")
+
+  @@id([title, technology_name])
+}
+
+model Projects {
+  title               String              @id @db.VarChar(50)
+  project_description String              @db.Text
+  in_progress         Int?                @db.TinyInt
+  link                String?             @db.Text
+  is_hidden           Int?                @db.TinyInt
+  github              String?             @db.Text
+  ProjectTechnology   ProjectTechnology[]
 }
